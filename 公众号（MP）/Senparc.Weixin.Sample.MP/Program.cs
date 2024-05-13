@@ -27,8 +27,8 @@ var registerService = app.UseSenparcWeixin(app.Environment,
     register => { /* CO2NET 全局配置 */ },
     (register, weixinSetting) =>
 {
-        //注册公众号信息（可以执行多次，注册多个公众号）
-        register.RegisterMpAccount(weixinSetting, "【盛派网络小助手】公众号");
+	//注册公众号信息（可以执行多次，注册多个公众号）
+	register.RegisterMpAccount(weixinSetting, "【盛派网络小助手】公众号");
 });
 
 #region 使用 MessageHadler 中间件，用于取代创建独立的 Controller
@@ -37,14 +37,14 @@ var registerService = app.UseSenparcWeixin(app.Environment,
 //使用公众号的 MessageHandler 中间件（不再需要创建 Controller）
 app.UseMessageHandlerForMp("/WeixinAsync", CustomMessageHandler.GenerateMessageHandler, options =>
 {
-        //获取默认微信配置
-        var weixinSetting = Senparc.Weixin.Config.SenparcWeixinSetting;
+	//获取默认微信配置
+	var weixinSetting = Senparc.Weixin.Config.SenparcWeixinSetting;
 
-        //[必须] 设置微信配置
-        options.AccountSettingFunc = context => weixinSetting;
+	//[必须] 设置微信配置
+	options.AccountSettingFunc = context => weixinSetting;
 
-        //[可选] 设置最大文本长度回复限制（超长后会调用客服接口分批次回复）
-        //options.TextResponseLimitOptions = new TextResponseLimitOptions(2048, weixinSetting.WeixinAppId);
+	//[可选] 设置最大文本长度回复限制（超长后会调用客服接口分批次回复）
+	//options.TextResponseLimitOptions = new TextResponseLimitOptions(2048, weixinSetting.WeixinAppId);
 });
 
 #endregion
@@ -54,9 +54,9 @@ app.UseMessageHandlerForMp("/WeixinAsync", CustomMessageHandler.GenerateMessageH
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-        app.UseExceptionHandler("/Home/Error");
-        // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-        app.UseHsts();
+	app.UseExceptionHandler("/Home/Error");
+	// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+	app.UseHsts();
 }
 
 app.UseHttpsRedirection();
@@ -72,15 +72,15 @@ app.UseStaticFiles();
 
 app.UseStaticFiles(new StaticFileOptions
 {
-        FileProvider = new PhysicalFileProvider(
-                Path.Combine(
-                        Directory.GetCurrentDirectory(),
-                        @"..",
-                        "..",
-                        "共享库（Shared）",
-                        "Senparc.Weixin.Sample.Shared",
-                        "wwwroot")),
-        RequestPath = new PathString("")
+	FileProvider = new PhysicalFileProvider(
+		Path.Combine(
+			Directory.GetCurrentDirectory(),
+			@"..",
+			"..",
+			"共享库（Shared）",
+			"Senparc.Weixin.Sample.Shared",
+			"wwwroot")),
+	RequestPath = new PathString("")
 });
 #endif
 #endregion

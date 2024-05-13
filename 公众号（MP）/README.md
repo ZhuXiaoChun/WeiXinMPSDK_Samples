@@ -1,5 +1,6 @@
 # 当前项目为官方项目“Senparc.Weixin.MP Sample”的信息整理
 **官方仓库地址：** https://github.com/JeffreySu/WeiXinMPSDK/tree/master/Samples/MP
+
 **官方文档地址：** https://sdk.weixin.senparc.com/Docs/MP#title_setting
 
 
@@ -17,7 +18,7 @@
 ## 当前服务，配置
 - 在项目中搜索“**#{Http服务端口号}#**”，替换为当前服务使用的Http服务端口号。
 - 在项目中搜索“**#{Https服务端口号}#**”，替换为当前服务使用的Https服务端口号，如不需要，可删除相关代码块。
-- 在项目中搜索“**#{当前服务_根路径}#**”，替换为当前服务部署后的根路径，如：“https://test.com”。
+- 在项目中搜索“**#{当前服务_根路径}#**”，替换为当前服务部署后的，当前服务根目录，如： https://test.com 。
 
 ## 当前服务，部署和验证
 - 发布当前服务，并部署。
@@ -39,6 +40,8 @@ app.UseMessageHandlerForMp("/WeixinAsync", CustomMessageHandler.GenerateMessageH
 2. 使用控制器的方式：
 创建控制器，并调用“MessageHandler”实例，可参考项目中的“**Controllers/WeixinController.cs**”文件。
 对应的请求路径为：**当前服务根目录/weiXin/index**  。
+
+3. 可参考本项目中的“MessageHandlers/CustomMessageHandler.cs”文件，实现公众号常用功能。
 
 # 3/5，微信JSSDK相关使用
 - 使用JSSDK时，需要在公众号后台，基本设置目录下，IP白名单下设置当前服务服务器的公网IP地址，设置后可使用“**当前服务根目录/weixinJSSDK/index**”路径，验证IP白名单是否生效。

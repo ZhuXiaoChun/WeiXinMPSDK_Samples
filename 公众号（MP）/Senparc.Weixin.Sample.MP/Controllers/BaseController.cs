@@ -14,28 +14,28 @@ namespace Senparc.Weixin.Sample.MP.Controllers;
 
 public class BaseController : Controller
 {
-        ////////////////////////////////////////////////
-        // @自身属性
-        ////////////////////////////////////////////////
+	////////////////////////////////////////////////
+	// @自身属性
+	////////////////////////////////////////////////
 
-        #region 自身属性
+	#region 自身属性
 
-        protected string AppId
-        {
-                get
-                {
-                        // 与微信公众账号后台的AppId设置保持一致，区分大小写。
-                        return Config.SenparcWeixinSetting.WeixinAppId;
-                }
-        }
+	protected string AppId
+	{
+		get
+		{
+			// 与微信公众账号后台的AppId设置保持一致，区分大小写。
+			return Config.SenparcWeixinSetting.WeixinAppId;
+		}
+	}
 
-        protected static ISenparcWeixinSettingForMP MpSetting
-        {
-                get
-                {
-                        return Config.SenparcWeixinSetting.MpSetting;
-                }
-        }
+	protected static ISenparcWeixinSettingForMP MpSetting
+	{
+		get
+		{
+			return Config.SenparcWeixinSetting.MpSetting;
+		}
+	}
 
-        #endregion
+	#endregion
 }

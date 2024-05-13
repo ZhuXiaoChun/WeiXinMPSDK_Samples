@@ -9,34 +9,34 @@ namespace Senparc.Weixin.Sample.MP.Controllers;
 /// </summary>
 public class WeixinJSSDKController : BaseController
 {
-        ////////////////////////////////////////////////
-        // @自身属性
-        ////////////////////////////////////////////////
+	////////////////////////////////////////////////
+	// @自身属性
+	////////////////////////////////////////////////
 
-        #region 自身属性
+	#region 自身属性
 
-        readonly string _appId = Config.SenparcWeixinSetting.WeixinAppId;
+	readonly string _appId = Config.SenparcWeixinSetting.WeixinAppId;
 
-        readonly string _appSecret = Config.SenparcWeixinSetting.WeixinAppSecret;
+	readonly string _appSecret = Config.SenparcWeixinSetting.WeixinAppSecret;
 
-        #endregion
+	#endregion
 
 
-        ////////////////////////////////////////////////
-        // @自身实现
-        ////////////////////////////////////////////////
+	////////////////////////////////////////////////
+	// @自身实现
+	////////////////////////////////////////////////
 
-        #region 自身实现
+	#region 自身实现
 
-        public async Task<ActionResult> Index()
-        {
-                var jssdkUiPackage = await JSSDKHelper.GetJsSdkUiPackageAsync(
-                        _appId,
-                        _appSecret,
-                        Request.AbsoluteUri());
-                { }
-                return View(jssdkUiPackage);
-        }
+	public async Task<ActionResult> Index()
+	{
+		var jssdkUiPackage = await JSSDKHelper.GetJsSdkUiPackageAsync(
+			_appId,
+			_appSecret,
+			Request.AbsoluteUri());
+		{ }
+		return View(jssdkUiPackage);
+	}
 
-        #endregion
+	#endregion
 }

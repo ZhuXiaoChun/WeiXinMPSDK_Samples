@@ -5,37 +5,37 @@ using System.Diagnostics;
 namespace Senparc.Weixin.Sample.MP.Controllers;
 
 public class HomeController
-        (ILogger<HomeController> logger)
-        : BaseController
+	(ILogger<HomeController> logger)
+	: BaseController
 {
 
-        ////////////////////////////////////////////////
-        // @自身属性
-        ////////////////////////////////////////////////
+	////////////////////////////////////////////////
+	// @自身属性
+	////////////////////////////////////////////////
 
-        #region 自身属性
+	#region 自身属性
 
-        private readonly ILogger<HomeController> _logger = logger;
+	private readonly ILogger<HomeController> _logger = logger;
 
-        #endregion
+	#endregion
 
 
-        ////////////////////////////////////////////////
-        // @自身实现
-        ////////////////////////////////////////////////
+	////////////////////////////////////////////////
+	// @自身实现
+	////////////////////////////////////////////////
 
-        #region 自身实现
+	#region 自身实现
 
-        public IActionResult Index()
-        {
-                return View();
-        }
+	public IActionResult Index()
+	{
+		return View();
+	}
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-                return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+	public IActionResult Error()
+	{
+		return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+	}
 
-        #endregion
+	#endregion
 }
