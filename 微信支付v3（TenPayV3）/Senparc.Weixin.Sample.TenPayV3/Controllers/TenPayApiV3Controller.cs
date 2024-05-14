@@ -306,11 +306,34 @@ public class TenPayApiV3Controller : BaseController
                         var price = product == null ? 100 : (int)(product.Price * 100);//单位：分
                         var notifyUrl = TenPayV3Info.TenPayV3Notify;
 
+
+
                         //请求信息
-                        TransactionsRequestData jsApiRequestData = new(TenPayV3Info.AppId, TenPayV3Info.MchId, name + " - 微信支付 V3", sp_billno, new TenpayDateTime(DateTime.Now.AddHours(1), false), null, notifyUrl, null, new() { currency = "CNY", total = price }, new(openId), null, null, null);
+                        var jsApiRequestData = new TransactionsRequestData(
+                                TenPayV3Info.AppId,
+                                TenPayV3Info.MchId,
+                                name + " - 微信支付 V3",
+                                sp_billno,
+                                new TenpayDateTime(DateTime.Now.AddHours(1), false),
+                                null,
+                                notifyUrl,
+                                null,
+                                new()
+                                {
+                                        currency = "CNY",
+                                        total = price
+                                },
+                                new(openId),
+                                null,
+                                null,
+                                null);
+
+
 
                         //请求接口
-                        var basePayApis2 = new Senparc.Weixin.TenPayV3.TenPayHttpClient.BasePayApis2(_httpClient, _tenpayV3Setting);
+                        var basePayApis2 = new Senparc.Weixin.TenPayV3.TenPayHttpClient.BasePayApis2(
+                                _httpClient, 
+                                _tenpayV3Setting);
                         var result = await basePayApis2.JsApiAsync(jsApiRequestData);
 
                         if (result.VerifySignSuccess != true)
@@ -387,10 +410,10 @@ public class TenPayApiV3Controller : BaseController
                         }
 
                         var logPath = Path.Combine(
-                                        logDir, 
-                                        string.Format("{0}-{1}-{2}.txt", 
+                                        logDir,
+                                        string.Format("{0}-{1}-{2}.txt",
                                         SystemTime.Now.ToString("yyyyMMdd"),
-                                        SystemTime.Now.ToString("HHmmss"), 
+                                        SystemTime.Now.ToString("HHmmss"),
                                         Guid.NewGuid().ToString("n")[..8]));
 
                         using (var fileStream = System.IO.File.OpenWrite(logPath))
