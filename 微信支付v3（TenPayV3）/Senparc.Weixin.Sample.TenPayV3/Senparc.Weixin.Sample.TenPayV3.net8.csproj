@@ -13,7 +13,7 @@
 	<ItemGroup Condition=" '$(Configuration)' != 'Release' ">
 		<PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
 		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.4" />
-		<!--<EmbeddedResource Include="..\..\Shared\Senparc.Weixin.Sample.Shared\wwwroot\**\*">
+		<!--<EmbeddedResource Include="..\..\共享库（Shared）\Senparc.Weixin.Sample.Shared\wwwroot\**\*">
 			<Link>wwwroot\%(RecursiveDir)/%(FileName)%(Extension)</Link>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</EmbeddedResource>-->

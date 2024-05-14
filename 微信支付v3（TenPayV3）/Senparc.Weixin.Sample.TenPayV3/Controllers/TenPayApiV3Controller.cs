@@ -155,7 +155,7 @@ public class TenPayApiV3Controller : BaseController
                 if (Senparc.Weixin.BrowserUtility.BrowserUtility.SideInWeixinBrowser(HttpContext))
                 {
                         //正在微信端，直接跳转到微信支付页面
-                        return RedirectToAction("JsApi", new { productId = productId, hc = hc });
+                        return RedirectToAction("JsApi", new { productId, hc });
                 }
                 else
                 {
@@ -190,7 +190,7 @@ public class TenPayApiV3Controller : BaseController
 
                 TransactionsRequestData requestData = new(TenPayV3Info.AppId, TenPayV3Info.MchId, name, sp_billno, new TenpayDateTime(DateTime.Now.AddHours(1)), null, notifyUrl, null, new() { currency = "CNY", total = price }, null, null, null, null);
 
-                BasePayApis basePayApis = new BasePayApis();
+                var basePayApis = new BasePayApis();
                 var result = await basePayApis.NativeAsync(requestData);
                 //进行安全签名验证
                 if (result.VerifySignSuccess == true)
@@ -240,7 +240,7 @@ public class TenPayApiV3Controller : BaseController
                                 return Content("您拒绝了授权！");
                         }
 
-                        if (!state.Contains("|"))
+                        if (!state.Contains('|'))
                         {
                                 //这里的state其实是会暴露给客户端的，验证能力很弱，这里只是演示一下
                                 //实际上可以存任何想传递的数据，比如用户ID
@@ -386,17 +386,21 @@ public class TenPayApiV3Controller : BaseController
                                 Directory.CreateDirectory(logDir);
                         }
 
-                        var logPath = Path.Combine(logDir, string.Format("{0}-{1}-{2}.txt", SystemTime.Now.ToString("yyyyMMdd"), SystemTime.Now.ToString("HHmmss"), Guid.NewGuid().ToString("n").Substring(0, 8)));
+                        var logPath = Path.Combine(
+                                        logDir, 
+                                        string.Format("{0}-{1}-{2}.txt", 
+                                        SystemTime.Now.ToString("yyyyMMdd"),
+                                        SystemTime.Now.ToString("HHmmss"), 
+                                        Guid.NewGuid().ToString("n")[..8]));
 
                         using (var fileStream = System.IO.File.OpenWrite(logPath))
                         {
                                 var notifyJson = orderReturnJson.ToString() ?? string.Empty;
                                 await fileStream.WriteAsync(
-                                        Encoding.Default.GetBytes(notifyJson),
-                                        0,
-                                        Encoding.Default.GetByteCount(notifyJson));
+                                        Encoding.Default
+                                        .GetBytes(notifyJson)
+                                        .AsMemory(0, Encoding.Default.GetByteCount(notifyJson)));
                                 fileStream.Close();
-
                         }
                         #endregion
 
@@ -430,7 +434,7 @@ public class TenPayApiV3Controller : BaseController
                                 return Content("商品信息不存在，或非法进入！1002");
                         }
 
-                        string? openId;//此时在外部浏览器，无法或得到OpenId
+                        string? openId = null;//此时在外部浏览器，无法或得到OpenId
                         string? sp_billno = Request.Query["order_no"];
                         if (string.IsNullOrEmpty(sp_billno))
                         {
@@ -453,7 +457,20 @@ public class TenPayApiV3Controller : BaseController
 
                         TransactionsRequestData.Scene_Info sence_info = new(HttpContext.UserHostAddress()?.ToString(), null, null, new("Wap", null, null, null, null));
 
-                        TransactionsRequestData requestData = new(TenPayV3Info.AppId, TenPayV3Info.MchId, body, sp_billno, new TenpayDateTime(DateTime.Now.AddHours(1), false), null, notifyUrl, null, new() { currency = "CNY", total = price }, new(openId), null, null, sence_info);
+                        TransactionsRequestData requestData = new(
+                                TenPayV3Info.AppId,
+                                TenPayV3Info.MchId,
+                                body,
+                                sp_billno,
+                                new TenpayDateTime(DateTime.Now.AddHours(1), false),
+                                null,
+                                notifyUrl,
+                                null,
+                                new() { currency = "CNY", total = price },
+                                new(openId),
+                                null,
+                                null,
+                                sence_info);
 
                         WeixinTrace.SendCustomLog("H5Pay接口请求", requestData.ToJson());
 
@@ -525,7 +542,8 @@ public class TenPayApiV3Controller : BaseController
 
                         string nonceStr = TenPayV3Util.GetNoncestr();
                         string? outTradeNo = HttpContext.Session.GetString("BillNo");
-                        if (!TradeNumberToTransactionId.TryGetValue(outTradeNo, out string transactionId))
+                        if (string.IsNullOrEmpty(outTradeNo)
+                                || !TradeNumberToTransactionId.TryGetValue(outTradeNo, out var transactionId))
                         {
                                 return Content("transactionId 不正确，可能是服务器还没有收到微信回调确认通知，退款失败。请稍后刷新再试。");
                         }
@@ -628,10 +646,12 @@ public class TenPayApiV3Controller : BaseController
                 //out_trade_no transaction_id 两个参数不能都为空
                 if (out_trade_no is null && transaction_id is null)
                 {
-                        throw new ArgumentNullException(nameof(out_trade_no) + " or " + nameof(transaction_id));
+                        throw new ArgumentNullException(
+                                nameof(out_trade_no),
+                                $"{nameof(transaction_id)}为”null“时，{nameof(out_trade_no)}不可为”null“。");
                 }
 
-                OrderReturnJson result = null;
+                OrderReturnJson? result = null;
 
                 //选择方式查询订单
                 if (out_trade_no is not null)
@@ -660,12 +680,11 @@ public class TenPayApiV3Controller : BaseController
         {
 
                 //out_trade_no transaction_id 两个参数不能都为空
-                if (out_trade_no is null)
-                {
-                        throw new ArgumentNullException(nameof(out_trade_no));
-                }
+                // !!!
+                ArgumentNullException.ThrowIfNull(out_trade_no);
+                // !!!
 
-                ReturnJsonBase result = null;
+                ReturnJsonBase result;
                 //result = await _basePayApis.CloseOrderAsync(out_trade_no, TenPayV3Info.MchId);
 
                 var dataInfo = new CloseRequestData(TenPayV3Info.MchId, out_trade_no);
@@ -694,7 +713,7 @@ public class TenPayApiV3Controller : BaseController
                 Console.WriteLine("FilePath:" + filePath);
                 using (var fs = new FileStream(filePath, FileMode.OpenOrCreate))
                 {
-                        BasePayApis basePayApis = new BasePayApis();
+                        var basePayApis = new BasePayApis();
 
                         //var result = basePayApis.TradeBillQueryAsync(date, fileStream: fs).GetAwaiter().GetResult();
 
@@ -723,7 +742,7 @@ public class TenPayApiV3Controller : BaseController
                 Console.WriteLine("FilePath:" + filePath);
                 using (var fs = new FileStream(filePath, FileMode.OpenOrCreate))
                 {
-                        BasePayApis basePayApis = new BasePayApis();
+                        var basePayApis = new BasePayApis();
 
                         //var result = await _basePayApis.FundflowBillQueryAsync(date, fs);
 
