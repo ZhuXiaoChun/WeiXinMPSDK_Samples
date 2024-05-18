@@ -188,7 +188,24 @@ public class TenPayApiV3Controller : BaseController
 
                 var notifyUrl = TenPayV3Info.TenPayV3Notify.Replace("/TenpayApiV3/", "/TenpayApiV3/");
 
-                TransactionsRequestData requestData = new(TenPayV3Info.AppId, TenPayV3Info.MchId, name, sp_billno, new TenpayDateTime(DateTime.Now.AddHours(1)), null, notifyUrl, null, new() { currency = "CNY", total = price }, null, null, null, null);
+                TransactionsRequestData requestData = new(
+                        TenPayV3Info.AppId,
+                        TenPayV3Info.MchId,
+                        name,
+                        sp_billno,
+                        new TenpayDateTime(DateTime.Now.AddHours(1)),
+                        null,
+                        notifyUrl,
+                        null,
+                        new()
+                        {
+                                currency = "CNY",
+                                total = price
+                        },
+                        null,
+                        null,
+                        null,
+                        null);
 
                 var basePayApis = new BasePayApis();
                 var result = await basePayApis.NativeAsync(requestData);
@@ -332,7 +349,7 @@ public class TenPayApiV3Controller : BaseController
 
                         //请求接口
                         var basePayApis2 = new Senparc.Weixin.TenPayV3.TenPayHttpClient.BasePayApis2(
-                                _httpClient, 
+                                _httpClient,
                                 _tenpayV3Setting);
                         var result = await basePayApis2.JsApiAsync(jsApiRequestData);
 
